@@ -7,7 +7,9 @@
 #include<stdlib.h>
 #include<string.h>
 
-typedef int tipoInfo;
+#include "persona.h"
+
+typedef Persona tipoInfo;
 
 typedef tipoInfo *tipoInfoRef;
 
