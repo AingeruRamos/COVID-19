@@ -9,49 +9,55 @@
 #include "../listaEnlazadaSimple.h"
 
 
-void SigueintePersona(ListaEnlazadaRef lista){
+void EstadosPersonas(ListaEnlazadaRef lista){
     tipoNodoRef nodo_aux = *lista;
+    int flag, indice_borrar;
+    flag=0;
 
     while(nodo_aux != NULL){
-        ActualizarEstado(nodo_aux);
+
+        indice_borrar=ActualizarEstado(nodo_aux,&flag);
+        if (flag == 1){
+            eliminarNodoPosicionIndice(lista, indice_borrar);
+        }
+
         nodo_aux = nodo_aux->sig;
     }
 }
 
-void ActualizarEstado(tipoNodoInfo nodo){
+int ActualizarEstado(tipoNodoInfo nodo,int *flag){
     Persona* persona = (Persona*) &nodo->info;
     float muerte;
 
-    if (nodo_aux->estado == 1){
-            if (nodo_aux->cont_incu == PERIODO_INCUBACION){
-                nodo_aux->estado = 2;
-                nodo_aux->cont_incu = 0;
+    if (persona->estado == 1){
+            if (persona->cont_incu == PERIODO_INCUBACION){
+                persona->estado = 2;
+                persona->cont_incu = 0;
              }
              else{
-                nodo_aux->cont_incu++;
+                persona->cont_incu++;
              }
 	}
 
-	if (nodo_aux->estado == 2){
-            if (nodo_aux->cont_recu == PERIODO_RECUPERACION){
-                nodo_aux->estado = 3;
-                nodo_aux->cont_recu = 0;
+	if (persona->estado == 2){
+            if (persona->cont_recu == PERIODO_RECUPERACION){
+                persona->estado = 3;
+                persona->cont_recu = 0;
             }
             else{
                 srand(time(NULL));
                 muerte = rand() % 101;
                 muerte = muerte / 100;
-                if (muerte >= nodo_aux->p_muerte){
-                    nodo_aux->estado = 5;
-                    //liberar nodo????
+                if (muerte >= persona->p_muerte){
+                    persona->estado = 5;
+                    N_FALLECIDOS++;
+                    flag=1
+                    return persona->indice;
                 }
                 else{
-                    nodo_aux->cont_recu++;
+                    persona->cont_recu++;
                 }
             }
 	}
-
-       
-
 
 }
