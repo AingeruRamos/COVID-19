@@ -3,12 +3,12 @@
 
 typedef struct Posicion {
     int x, y;
-};
+}Posicion;
 
 typedef struct Velocidad {
     int modulo;
     float ux, uy; //Vector unitario de dirección
-};
+}Velocidad;
 
 typedef struct Persona {
     int id;
@@ -22,6 +22,7 @@ typedef struct Persona {
 }Persona;
 
 Persona* NuevaPersona(int id, int edad, int estado, float p_muerte);
+Persona* CopiarPersona(Persona* p_origen);
 void PrintPersona(Persona* persona);
 int calcular_edad();
 float calcular_p_morir(int edad);

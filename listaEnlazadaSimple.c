@@ -450,6 +450,7 @@ int mostrarNumeroNodos(ListaEnlazadaRef raiz)
  * tipoInfo es un int es sencillo, si es un registro también, pero ya es
  * diferente implementación.
  */
+/*
 tipoInfo
 devolverInfoPosicionIndice(ListaEnlazada raiz, int indice)
 {
@@ -472,14 +473,14 @@ devolverInfoPosicionIndice(ListaEnlazada raiz, int indice)
 	}
 
 }
-
-
+*/
 /*
  * Función presentada en clase de teoría. Se debe implementar
  * la versión presentada en clase y disponible en las diapositivas.
  * Todos los aspectos sobre funcionamiento y valor a devolver
  * están descritos en las diapositivas
  */
+/*
 int
 insertarOrdenada(ListaEnlazadaRef raiz, tipoInfoRef info)
 {
@@ -497,9 +498,10 @@ insertarOrdenada(ListaEnlazadaRef raiz, tipoInfoRef info)
     if (indice == NULL)
     	*raiz = nuevo;
     else {
-		/* Recorremos lista hasta un nodo con contenido
+*/		/* Recorremos lista hasta un nodo con contenido
 		mayor al nodo a insertar hasta llegar al final */
-        while (indice->info < nuevo->info && indice->sig != NULL) {
+/*
+      while (indice->info < nuevo->info && indice->sig != NULL) {
            	ant = indice;
 	        indice = indice->sig;
 		}
@@ -521,7 +523,8 @@ insertarOrdenada(ListaEnlazadaRef raiz, tipoInfoRef info)
 		}
 	}
 }
-
+*/
+/*
 int
 mostrarListaEnlazada(ListaEnlazada raiz)
 {
@@ -541,7 +544,8 @@ mostrarListaEnlazada(ListaEnlazada raiz)
 	return res;
 }
 
-
+*/
+/*
 int
 crearListaValoresAleatorios(ListaEnlazadaRef raiz, int numNodos)
 {
@@ -561,5 +565,6 @@ crearListaValoresAleatorios(ListaEnlazadaRef raiz, int numNodos)
 	}
 	return -1;
 }
+*/
 
 

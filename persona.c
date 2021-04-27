@@ -31,6 +31,23 @@ Persona* NuevaPersona(int id, int edad, int estado, float p_muerte) {
     return persona;
 }
 
+Persona* CopiarPersona(Persona* p_origen) {
+    Persona* persona = (Persona*) malloc(sizeof(Persona));
+    persona->id = p_origen->id;
+    persona->edad = p_origen->edad;
+    persona->estado = p_origen->estado;
+    persona->p_muerte = p_origen->p_muerte;
+
+    persona->pos.x = p_origen->pos.x;
+    persona->pos.y = p_origen->pos.y;
+
+    persona->vel.modulo = p_origen->vel.modulo;
+    persona->vel.ux = p_origen->vel.ux;
+    persona->vel.uy = p_origen->vel.uy;
+
+    return persona;
+}
+
 void PrintPersona(Persona* persona) {
     printf("ID: %d\n", persona->id);
     printf("EDAD: %d\n", persona->edad);
