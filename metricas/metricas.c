@@ -23,6 +23,8 @@ void GuardarPosiciones(char* nombre) {
         nodo_aux = nodo_aux->sig;
     }
 
+    fprintf(fp, "\n");
+
     nodo_aux = *contagiados;
     while(nodo_aux != NULL) {
         persona = (struct Persona*) &nodo_aux->info;

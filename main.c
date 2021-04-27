@@ -6,6 +6,7 @@
 
 #include "persona.h"
 #include "listaEnlazadaSimple.h"
+#include "propagacion/propagacion.h"
 #include "move/move.h"
 #include "metricas/metricas.h"
 
@@ -30,7 +31,7 @@ int main(int argc, char** argv) {
         //Actualizar Estados
 
         //Propagación
-
+	AplicarPropagacion();
         //Movimiento
         AplicarMovimiento(sanos);
         AplicarMovimiento(contagiados);
