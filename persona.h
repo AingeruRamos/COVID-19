@@ -1,25 +1,29 @@
 #ifndef _PERSONA_H_
 #define _PERSONA_H_
 
-struct Posicion {
+typedef struct Posicion {
     int x, y;
 };
 
-struct Velocidad {
+typedef struct Velocidad {
     int modulo;
     float ux, uy; //Vector unitario de dirección
 };
 
-struct Persona {
+typedef struct Persona {
     int id;
     int edad;
     int estado;
+    int cont_incu; //contador para el tiempo de incubacion
+    int  cont_recu; //contador para el tiepo de recuperacion
     float p_muerte; //Probabilidad de muerte
     struct Posicion pos;
     struct Velocidad vel;
-} typedef Persona;
+}Persona;
 
-struct Persona* NuevaPersona(int id, int edad, int estado, float p_muerte);
-void PrintPersona(struct Persona* persona);
+Persona* NuevaPersona(int id, int edad, int estado, float p_muerte);
+void PrintPersona(Persona* persona);
+int calcular_edad();
+float calcular_p_morir(int edad);
 
 #endif

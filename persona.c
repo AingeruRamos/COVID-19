@@ -3,20 +3,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <gsl/gsl_rng.h>
+#include <gsl/gsl_randist.h>
 
 #include "globales.h"
 
-struct Persona* NuevaPersona(int id, int edad, int estado, float p_muerte) {
-    struct Persona* persona = (struct Persona*) malloc(sizeof(struct Persona));
+Persona* NuevaPersona(int id, int edad, int estado, float p_muerte) {
+
+    Persona* persona = (Persona*) malloc(sizeof(Persona));
     persona->id = id;
 
-    //Hacer lo de la función beta
+    edad = calcular_edad();
     persona->edad = edad;
     persona->estado = estado;
 
-    //Debe ser en función de la edad
+    p_muerte = calcular_p_morir(edad);
     persona->p_muerte = p_muerte;
-    
+
     persona->pos.x = rand() % MAX_X;
     persona->pos.y = rand() % MAX_Y;
 
@@ -28,7 +31,7 @@ struct Persona* NuevaPersona(int id, int edad, int estado, float p_muerte) {
     return persona;
 }
 
-void PrintPersona(struct Persona* persona) {
+void PrintPersona(Persona* persona) {
     printf("ID: %d\n", persona->id);
     printf("EDAD: %d\n", persona->edad);
     printf("ESTADO: %d\n", persona->estado);
@@ -36,3 +39,54 @@ void PrintPersona(struct Persona* persona) {
     printf("POS: %d, %d\n", persona->pos.x, persona->pos.y);
     printf("VEL: M %d, UX %f, UY %f\n", persona->vel.modulo, persona->vel.ux, persona->vel.uy);
 }
+
+int calcular_edad(void){
+    int semilla, edad;
+    float mu;
+    gsl_rng *r;
+
+    mu=100;
+    semilla=1;
+
+    gsl_rng_env_setup();
+    r = gsl_rng_alloc(gsl_rng_default);
+    gsl_rng_set(r, semilla);
+
+    edad = round(mu * gsl_ran_beta(r, ALFA, BETA));
+
+    gsl_rng_free(r);
+
+    return edad;
+}
+
+float calcular_p_morir(int edad){
+  float prob;
+
+  if( (edad >= 0) && (edad < 10) ){
+     prob = 0;
+  }
+  else if( (edad >= 10) && (edad < 20) ){
+     prob = 0.002;
+  }
+  else if( (edad >= 20) && (edad < 30) ){
+     prob = 0.002;
+  }
+  else if( (edad >= 30) && (edad < 40) ){
+     prob = 0.004;
+  }
+  else if( (edad >= 50) && (edad < 60) ){
+     prob = 0.013;
+  }
+  else if( (edad >= 60) && (edad < 70) ){
+     prob = 0.036;
+  }
+  else if( (edad >= 70) && (edad < 80) ){
+     prob = 0.08;
+  }
+  else{
+     prob = 0.148;
+  }
+
+  return prob;
+}
+
