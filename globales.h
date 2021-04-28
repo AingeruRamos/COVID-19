@@ -29,6 +29,8 @@ int N_SANOS;
 int N_CONTAGIADOS;
 int N_RECUPERADOS;
 int N_FALLECIDOS;
+int N_PERSONAS_VACU;
+int N_PERSONAS_VACU_T; //personas a vacunar por unidad de tiempo
 
 //METRICAS
 float M_SANOS;

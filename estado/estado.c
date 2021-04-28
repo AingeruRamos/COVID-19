@@ -18,18 +18,18 @@ void EstadosPersonas(ListaEnlazadaRef lista){
 
         indice_borrar=ActualizarEstado(nodo_aux,&flag);
         if (flag == 1){
-            eliminarNodoPosicionIndice(lista, indice_borrar);
+//            eliminarNodoPosicionIndice(lista, indice_borrar);
         }
 
         nodo_aux = nodo_aux->sig;
     }
 }
 
-int ActualizarEstado(tipoNodoInfo nodo,int *flag){
-    Persona* persona = (Persona*) &nodo->info;
+int ActualizarEstado(tipoNodoRef nodo,int *flag){  //devuelve indice si la persona se muere
+    Persona *persona = (Persona*) &nodo->info;
     float muerte;
 
-    if (persona->estado == 1){
+    if (persona->estado == 1){  //si la persona esta contagiada, cuando presenta sintomas
             if (persona->cont_incu == PERIODO_INCUBACION){
                 persona->estado = 2;
                 persona->cont_incu = 0;
@@ -39,7 +39,7 @@ int ActualizarEstado(tipoNodoInfo nodo,int *flag){
              }
 	}
 
-	if (persona->estado == 2){
+	if (persona->estado == 2){ //si la persona tiene covid, cuando se recupera
             if (persona->cont_recu == PERIODO_RECUPERACION){
                 persona->estado = 3;
                 persona->cont_recu = 0;
@@ -51,13 +51,33 @@ int ActualizarEstado(tipoNodoInfo nodo,int *flag){
                 if (muerte >= persona->p_muerte){
                     persona->estado = 5;
                     N_FALLECIDOS++;
-                    flag=1
-                    return persona->indice;
+                    *flag=1;
+                    return persona->id;
                 }
                 else{
                     persona->cont_recu++;
                 }
             }
 	}
+}
 
+
+void VacunarPersonas(ListaEnlazadaRef lista){
+    tipoNodoRef nodo_aux = *lista;
+    Persona persona;
+    int vacunados;
+
+    vacunados = N_PERSONAS_VACU_T;
+
+    while((nodo_aux->sig != NULL) || (vacunados != 0)){
+
+        persona = (Persona) nodo_aux->info;
+
+        if ((persona.estado == 0) || (persona.estado == 3)){
+            persona.estado = 4; //si que quiere aplicar politica, switch
+        }
+        vacunados--;
+
+	nodo_aux = nodo_aux->sig;
+    }
 }

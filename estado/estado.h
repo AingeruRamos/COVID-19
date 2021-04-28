@@ -3,7 +3,9 @@
 
 #include "../listaEnlazadaSimple.h"
 
-void AplicarMovimiento(ListaEnlazadaRef lista);
+void EstadosPersonas(ListaEnlazadaRef lista);
+int ActualizarEstado(tipoNodoRef nodo,int *flag);
+void VacunarPersonas(ListaEnlazadaRef lista);
 
 #endif
 
