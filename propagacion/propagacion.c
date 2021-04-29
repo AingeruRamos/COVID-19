@@ -30,31 +30,30 @@ void AplicarPropagacion() {
     struct Persona* persona_copia;
 
     float d, r;
-    int cambio_nodo;
+    int hayContagio;
 
     while(nodo_sanos != NULL) {
-	cambio_nodo = 1;
+	hayContagio = 0;
         persona_sana = &nodo_sanos->info;
-        while(nodo_contagiados != NULL) {
+        while(nodo_contagiados != NULL && !hayContagio) {
             persona_contagiada = &nodo_contagiados->info;
             d = DistanciaEntrePersonas(persona_sana, persona_contagiada);
-            if(d < RADIO_CONTAGIO) {
-               r = ((float) rand()/(float) RAND_MAX);
-               if(r < P_CONTAGIO) {
-		   cambio_nodo = 0;
-		   nodo_aux = nodo_sanos->sig;
-		   persona_copia = CopiarPersona(persona_sana);
-                   persona_copia->estado = 3;
-                   eliminarNodo(sanos, nodo_sanos);
-		   insertarNodoComienzo(contagiados, persona_copia);
-                }
+            r = ((float) rand()/(float) RAND_MAX);
+	    if(d < RADIO_CONTAGIO && r < P_CONTAGIO) {
+	        hayContagio = 1;
+		nodo_aux = nodo_sanos->sig;
+		persona_copia = CopiarPersona(persona_sana);
+                persona_copia->estado = 1;
+                eliminarNodo(sanos, nodo_sanos);
+		insertarNodoComienzo(contagiados, persona_copia);
             }
             nodo_contagiados = nodo_contagiados->sig;
         }
-	if(cambio_nodo) {
+	nodo_contagiados = *contagiados;
+	if(!hayContagio) {
             nodo_sanos = nodo_sanos->sig;
    	} else {
 	    nodo_sanos = nodo_aux;
 	}
-   }
+    }
 }
