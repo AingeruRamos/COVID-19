@@ -29,11 +29,12 @@ int main(int argc, char** argv) {
     int tiempo, n_metrica;
     n_metrica = 0;
     for(tiempo=0; tiempo<TIEMPO_SIMULACION; tiempo++) {
+        TIME = tiempo;
         //Actualizar Estados
         EstadosPersonas(contagiados);
-//        VacunarPersonas(sanos);
+        VacunarPersonas(sanos);
         //Propagación
-//	AplicarPropagacion();
+	AplicarPropagacion();
         //Movimiento
         AplicarMovimiento(sanos);
         AplicarMovimiento(contagiados);
@@ -87,7 +88,7 @@ void InicializarGlobales() {
     }
 
     crearVacia(contagiados);
-    nueva_persona = NuevaPersona(N_PERSONAS, 10, 1, 0.1);
+    nueva_persona = NuevaPersona(N_PERSONAS-1, 10, 1, 0.1);
     insertarNodoFinal(contagiados, nueva_persona);
 
     M_SANOS = 1.0;
