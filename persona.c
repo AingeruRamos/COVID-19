@@ -10,8 +10,8 @@
 
 Persona* NuevaPersona(int id, int edad, int estado, float p_muerte) {
 
-//    Persona* persona = (Persona*) malloc(sizeof(Persona));
-    Persona *persona;
+    Persona* persona = (Persona*) malloc(sizeof(Persona));
+//    Persona *persona;
     persona->id = id;
 
     edad = calcular_edad();
