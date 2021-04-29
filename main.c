@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
     n_metrica = 0;
     for(tiempo=0; tiempo<TIEMPO_SIMULACION; tiempo++) {
         //Actualizar Estados
-//        EstadosPersonas(contagiados);
+        EstadosPersonas(contagiados);
 //        VacunarPersonas(sanos);
         //Propagación
 //	AplicarPropagacion();
