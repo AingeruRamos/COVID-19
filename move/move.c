@@ -18,24 +18,31 @@ void ActualizarPosicion(tipoNodoRef nodo) {
     persona->pos.x += round(persona->vel.modulo*persona->vel.ux);
     persona->pos.y += round(persona->vel.modulo*persona->vel.uy);
 
-    int aux;
-    if(persona->pos.x < 0) { //Colisión pared izquierda
-        persona->pos.x = -persona->pos.x;
-        CalcularVectorEspejo(0, 1, &persona->vel);
-    } else if(persona->pos.x > MAX_X) { //Colisión paed derecha
-        aux = persona->pos.x - MAX_X;
-        persona->pos.x = MAX_X - aux;
-        CalcularVectorEspejo(0, 1, &persona->vel);
-    }
+    int aux, hayColision;
+    do {
+        hayColision = 0;
+        if(persona->pos.x < 0) { //Colisión pared izquierda
+            persona->pos.x = -persona->pos.x;
+            CalcularVectorEspejo(0, 1, &persona->vel);
+            hayColision = 1;
+        } else if(persona->pos.x > MAX_X) { //Colisión paed derecha
+            aux = persona->pos.x - MAX_X;
+            persona->pos.x = MAX_X - aux;
+            CalcularVectorEspejo(0, 1, &persona->vel);
+            hayColision = 1;
+        }
 
-    if(persona->pos.y < 0) { //Colisión  techo
-        persona->pos.y = -persona->pos.y;
-        CalcularVectorEspejo(1, 0, &persona->vel);
-    } else if(persona->pos.y > MAX_Y) { //Colisión suelo
-        aux = persona->pos.y - MAX_Y;
-        persona->pos.y = MAX_Y - aux;
-        CalcularVectorEspejo(1, 0, &persona->vel);
-    }
+        if(persona->pos.y < 0) { //Colisión  techo
+            persona->pos.y = -persona->pos.y;
+            CalcularVectorEspejo(1, 0, &persona->vel);
+            hayColision = 1;
+        } else if(persona->pos.y > MAX_Y) { //Colisión suelo
+            aux = persona->pos.y - MAX_Y;
+            persona->pos.y = MAX_Y - aux;
+            CalcularVectorEspejo(1, 0, &persona->vel);
+            hayColision = 1;
+        }
+    } while(hayColision);
 }
 
 void ActualizarVelocidad(tipoNodoRef nodo) {
@@ -47,6 +54,7 @@ void ActualizarVelocidad(tipoNodoRef nodo) {
         persona->vel.modulo = (int) r;
 
         r = ((float) rand()/(float) RAND_MAX) * 2; //Número aleatorio entre 0..2
+
         persona->vel.ux = cos(r*M_PI); //En radianes
         persona->vel.uy = sin(r*M_PI);
     }
