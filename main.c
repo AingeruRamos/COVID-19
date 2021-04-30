@@ -29,10 +29,10 @@ int main(int argc, char** argv) {
     int tiempo, n_metrica;
     n_metrica = 0;
     for(tiempo=0; tiempo<TIEMPO_SIMULACION; tiempo++) {
-	TIME = tiempo;   
-     //Actualizar Estados
-//        EstadosPersonas(contagiados);
-//        VacunarPersonas(sanos);
+        TIME = tiempo;
+        //Actualizar Estados
+        EstadosPersonas(contagiados);
+        VacunarPersonas(sanos);
         //Propagación
 	AplicarPropagacion();
         //Movimiento

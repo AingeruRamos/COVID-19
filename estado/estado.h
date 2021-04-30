@@ -6,6 +6,6 @@
 void EstadosPersonas(ListaEnlazadaRef lista);
 int ActualizarEstado(tipoNodoRef nodo,int *flag);
 void VacunarPersonas(ListaEnlazadaRef lista);
-
+void PersonaSana(int id);
 #endif
 
