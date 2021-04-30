@@ -19,6 +19,7 @@ void ActualizarPosicion(tipoNodoRef nodo) {
     persona->pos.y += round(persona->vel.modulo*persona->vel.uy);
 
     int aux, hayColision;
+
     do {
         hayColision = 0;
         if(persona->pos.x < 0) { //Colisión pared izquierda
