@@ -9,54 +9,67 @@
 #include "../listaEnlazadaSimple.h"
 
 
-void EstadosPersonas(ListaEnlazadaRef lista){
-    tipoNodoRef nodo_aux = *lista;
+void EstadosPersonas(ListaEnlazadaRef contagiados, ListaEnlazadaRef sanos){
+    tipoNodoRef nodo_aux = *contagiados;
     int flag, indice_borrar;
     flag=0;
 
+//    if (!estaVacia(*lista)){
     while(nodo_aux->sig != NULL){
 
-        indice_borrar=ActualizarEstado(nodo_aux,&flag);
-        if (flag == 1){
-            eliminarNodoPosicionIndice(lista, indice_borrar);
+        indice_borrar=ActualizarEstado(nodo_aux,&flag,sanos,contagiados);
+        if (flag == 1 && indice_borrar >= 0){
+            eliminarNodoPosicionIndice(contagiados, indice_borrar);
+            printf("se ha eliminado un nodo\n");
         }
+        flag = 0;
 
         nodo_aux = nodo_aux->sig;
     }
+ /*   else{
+       printf("La lista de contagiados esta vacia\n");
+       fflush(stdin);
+    }*/
 }
 
-int ActualizarEstado(tipoNodoRef nodo,int *flag){  //devuelve indice si la persona se muere
+int ActualizarEstado(tipoNodoRef nodo,int *flag, ListaEnlazadaRef sanos, ListaEnlazadaRef contagiados){  //devuelve indice si la persona se muere
     Persona *persona = (Persona*) &nodo->info;
     float muerte;
 
-    if (persona->estado == 1){  //si la persona esta contagiada, cuando presenta sintomas
+
+        if (persona->estado == 1){  //si la persona esta contagiada, cuando presenta sintomas
             if (persona->cont_incu == PERIODO_INCUBACION){
                 persona->estado = 2;
                 persona->cont_incu = 0;
              }
              else{
                 persona->cont_incu++;
+                return -1;
              }
 	}
 
 	if (persona->estado == 2){ //si la persona tiene covid, cuando se recupera
             if (persona->cont_recu == PERIODO_RECUPERACION){
                 persona->estado = 3;
-                PersonaSana(persona->id); //
                 persona->cont_recu = 0;
+                printf("Entra\n");
+                PersonaSana(persona->id, sanos, contagiados);
+                printf("La persona con id %d se ha recuperado\n",persona->id);
+                fflush(stdin);
             }
-            else{
-                srand(time(NULL));
-                muerte = rand() % 101;
-                muerte = muerte / 100;
-                if (muerte >= persona->p_muerte){
+           else{
+                muerte =((float) rand() /(float) RAND_MAX);
+                printf("%lf, %f\n",muerte, persona->p_muerte);
+                if (muerte <  persona->p_muerte){
                     persona->estado = 5;
                     N_FALLECIDOS++;
+                    printf("%d fallecidos\n",N_FALLECIDOS);
                     *flag=1;
                     return persona->id;
                 }
                 else{
                     persona->cont_recu++;
+                    return -2;
                 }
             }
 	}
@@ -65,34 +78,33 @@ int ActualizarEstado(tipoNodoRef nodo,int *flag){  //devuelve indice si la perso
 
 void VacunarPersonas(ListaEnlazadaRef lista){
     tipoNodoRef nodo_aux = *lista;
-    int vacunados;
+    int vacunados,count;
+    count = 0;
 
-  //  vacunados = N_PERSONAS_VACU_T;
-    printf("gshgs");
-                fflush(stdin);
     vacunados = N_PERSONAS_VACU_T;
-    if(!estaVacia(*lista)){
-    while((nodo_aux->sig != NULL) || (vacunados != 0)){
+    while(nodo_aux != NULL && vacunados != 0){
 
-//        Persona *persona = (Persona*) &nodo_aux->info;
+        Persona *persona = (Persona*) &nodo_aux->info;
 
-        if ((nodo_aux->info.estado == 0) || (nodo_aux->info.estado == 3)){
-            nodo_aux->info.estado = 4; //si que quiere aplicar politica, switch
+        if ((persona->estado == 0) || (persona->estado == 3)){
+            persona->estado = 4; //si que quiere aplicar politica, switch
+            count++;
+            vacunados--;
         }
-        vacunados--;
 
 	nodo_aux = nodo_aux->sig;
-    }
     }
 }
 
 
-void PersonaSana(int indice){
+void PersonaSana(int indice, ListaEnlazadaRef sanos, ListaEnlazadaRef contagiados){
    tipoNodoRef nodo_sano = *sanos;
    tipoNodoRef nodo_contagiado = *contagiados;
-   tipoNodoRef nodo_ant;
+   tipoNodoRef nodo_ant,nodo_aux;
 
-    while(nodo_contagiado->sig != NULL){
+   nodo_ant = NULL;
+
+    while(nodo_contagiado != NULL){
         Persona *persona = (Persona*) &nodo_contagiado->info;
         if ( persona->id != indice){
             nodo_ant = nodo_contagiado;
@@ -100,12 +112,30 @@ void PersonaSana(int indice){
         }
         else{
             printf("%d- %d",persona->id,indice);
-            while(nodo_sano->sig != NULL){
-                nodo_sano = nodo_sano->sig;
+            fflush(stdin);
+            if (nodo_ant == NULL && nodo_contagiado->sig != NULL){  //si el nodo es el primero
+                *contagiados = nodo_contagiado->sig;
+                nodo_contagiado->sig = nodo_sano;
+                *sanos = nodo_contagiado;
             }
-            nodo_sano->sig = nodo_contagiado;
-            nodo_ant->sig = nodo_contagiado->sig;
-            nodo_contagiado->sig = NULL;
+            else if ( nodo_contagiado->sig == NULL && nodo_ant != NULL){  //si el nodo es el ultimo
+                nodo_contagiado->sig = nodo_sano;
+                nodo_ant = NULL;
+                *sanos = nodo_contagiado;
+            }
+            else if ( nodo_contagiado->sig == NULL && nodo_ant == NULL){ //si solo hay un nodo
+                nodo_contagiado->sig = nodo_sano;
+                *sanos = nodo_contagiado;
+                contagiados = NULL;
+            }
+            else{  //si el nodo esta por el medio
+                nodo_aux = nodo_contagiado->sig;
+                nodo_contagiado->sig = nodo_sano;
+                nodo_ant->sig = nodo_aux;
+                *sanos = nodo_contagiado;
+            }
+            break;
         }
     }
 }
+

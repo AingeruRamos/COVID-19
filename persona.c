@@ -3,25 +3,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
-
 #include "globales.h"
 
-Persona* NuevaPersona(int id, int edad, int estado, float p_muerte) {
+Persona* NuevaPersona(int id, int estado) {
 
+    float p_muerte;
+    int edad;
     Persona* persona = (Persona*) malloc(sizeof(Persona));
-//    Persona *persona;
+
     persona->id = id;
 
-    edad = calcular_edad();
-    persona->edad = edad;
+    persona->edad = 0;
     persona->estado = estado;
     persona->cont_incu = 0;
     persona->cont_recu = 0;
-
-    p_muerte = calcular_p_morir(edad);
-    persona->p_muerte = p_muerte;
+    persona->p_muerte = 0;
 
     persona->pos.x = rand() % MAX_X;
     persona->pos.y = rand() % MAX_Y;
@@ -60,25 +56,33 @@ void PrintPersona(Persona* persona) {
     printf("VEL: M %d, UX %f, UY %f\n", persona->vel.modulo, persona->vel.ux, persona->vel.uy);
 }
 
-int calcular_edad(void){
-    int semilla, edad;
+/*
+void calcular_edad(ListaEnlazadaRef lista,int n){
+    int semilla, edad,i;
     float mu;
+    tipoNodoRef nodo = *lista;
+    Persona *persona;
     gsl_rng *r;
 
-    mu=100;
+    mu=N_PERSONAS;
     semilla=1;
 
     gsl_rng_env_setup();
     r = gsl_rng_alloc(gsl_rng_default);
     gsl_rng_set(r, semilla);
 
-    edad = round(mu * gsl_ran_beta(r, ALFA, BETA));
+    for (i=0 ; i< n; i++){
+        persona = (Persona*) &nodo->info;
+        edad = round(mu * gsl_ran_beta(r, ALFA, BETA));
+        persona->edad = edad;
+        persona->p_muerte = calcular_p_morir(edad);
+        printf("%d edad %f p_muerte\n",edad, persona->p_muerte);
+        nodo = nodo->sig;
+    }
 
     gsl_rng_free(r);
-
-    return edad;
 }
-
+*/
 float calcular_p_morir(int edad){
   float prob;
 

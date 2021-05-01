@@ -1,6 +1,7 @@
 #ifndef _PERSONA_H_
 #define _PERSONA_H_
 
+
 typedef struct Posicion {
     int x, y;
 }Posicion;
@@ -21,10 +22,9 @@ typedef struct Persona {
     struct Velocidad vel;
 }Persona;
 
-Persona* NuevaPersona(int id, int edad, int estado, float p_muerte);
+Persona* NuevaPersona(int id, int estado);
 Persona* CopiarPersona(Persona* p_origen);
 void PrintPersona(Persona* persona);
-int calcular_edad();
 float calcular_p_morir(int edad);
 
 #endif

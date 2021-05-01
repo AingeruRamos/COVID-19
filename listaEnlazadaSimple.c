@@ -356,31 +356,28 @@ eliminarNodoPosicionIndice(ListaEnlazadaRef raiz, int indice)
 {
 
 	tipoNodoRef ind, ant;
-	int counter;	
 
 
-	if (!estaVacia(*raiz) && indice >= 0 && indice < mostrarNumeroNodos(raiz)) {
+	if (!estaVacia(*raiz) && indice >= 0) {
 		ind = *raiz;
 		ant = NULL;
-		counter = 0;
 
-		while (ind->sig != NULL && counter < indice) {
+		while (ind->sig != NULL && ind->info.id != indice) {
 			ant = ind;
 			ind = ind->sig;
-			counter++;
 		}
-		
+
 		if (ant == NULL) {
 			//Primera posición
-			*raiz = (*raiz)->sig;	
-			free (ind);	
+			*raiz = (*raiz)->sig;
+			free (ind);
 			return 0;
 		} else {
 			//Existe mas de un nodo
 			ant->sig = ind->sig;
 			free (ind);
 			return 0;
-		}	
+		}
 	}
 	return -1;
 
@@ -542,9 +539,9 @@ mostrarListaEnlazada(ListaEnlazada raiz)
 		aImprimir = aImprimir->sig;
 	}
 	return res;
-}
+}*/
 
-*/
+
 /*
 int
 crearListaValoresAleatorios(ListaEnlazadaRef raiz, int numNodos)

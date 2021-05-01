@@ -11,8 +11,13 @@
 #include "move/move.h"
 #include "metricas/metricas.h"
 
+#include <gsl/gsl_rng.h>
+#include <gsl/gsl_randist.h>
+#include <math.h>
+
 void InicializarParametros(char** argv);
 void InicializarGlobales();
+void calcular_edad(ListaEnlazadaRef lista,int n);
 
 int main(int argc, char** argv) {
 
@@ -29,9 +34,9 @@ int main(int argc, char** argv) {
     int tiempo, n_metrica;
     n_metrica = 0;
     for(tiempo=0; tiempo<TIEMPO_SIMULACION; tiempo++) {
-        TIME = tiempo;
+//        TIME = tiempo;
         //Actualizar Estados
-        EstadosPersonas(contagiados);
+        EstadosPersonas(contagiados,sanos);
         VacunarPersonas(sanos);
         //Propagación
 	AplicarPropagacion();
@@ -83,13 +88,16 @@ void InicializarGlobales() {
 
     crearVacia(sanos);
     for(i=0; i<N_SANOS; i++) {
-        nueva_persona = NuevaPersona(i, 10, 0, 0.1);
+        nueva_persona = NuevaPersona(i, 0);
         insertarNodoFinal(sanos, nueva_persona);
     }
 
     crearVacia(contagiados);
-    nueva_persona = NuevaPersona(N_PERSONAS-1, 10, 1, 0.1);
+    nueva_persona = NuevaPersona(N_PERSONAS-1, 2);
     insertarNodoFinal(contagiados, nueva_persona);
+
+    calcular_edad(sanos,N_SANOS);
+    calcular_edad(contagiados,N_CONTAGIADOS);
 
     M_SANOS = 1.0;
     M_CONTAGIADOS = 1.0;
@@ -97,3 +105,32 @@ void InicializarGlobales() {
     M_FALLECIDOS = 1.0;
     R0 = 1.0;
 }
+
+
+void calcular_edad(ListaEnlazadaRef lista,int n){
+    int semilla, edad,i;
+    float mu;
+    tipoNodoRef nodo = *lista;
+    Persona *persona;
+    gsl_rng *r;
+
+    mu=100;
+    semilla=1;
+
+    gsl_rng_env_setup();
+    r = gsl_rng_alloc(gsl_rng_default);
+    gsl_rng_set(r, semilla);
+
+    //media edad = alfa / (alfa + beta)
+
+    for (i=0 ; i< n; i++){
+        persona = (Persona*) &nodo->info;
+        edad = round(mu * gsl_ran_beta(r, ALFA, BETA));
+        persona->edad = edad;
+        persona->p_muerte = calcular_p_morir(edad);
+        nodo = nodo->sig;
+    }
+
+    gsl_rng_free(r);
+}
+
