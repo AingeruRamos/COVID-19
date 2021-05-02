@@ -15,11 +15,16 @@
 #include <gsl/gsl_randist.h>
 #include <math.h>
 
-void InicializarParametros(char** argv);
+void InicializarParametros(char** argv,char* v);
 void InicializarGlobales();
 void calcular_edad(ListaEnlazadaRef lista,int n);
 
 int main(int argc, char** argv) {
+
+    int tiempo, n_metrica;
+    char *v = NULL;
+    n_metrica = 0;
+
 
     if(argc != 9) {
         printf("Error en los parametros\n");
@@ -28,11 +33,10 @@ int main(int argc, char** argv) {
 
     srand(time(NULL));
 
-    InicializarParametros(argv);
+    InicializarParametros(argv,v);
     InicializarGlobales();
 
-    int tiempo, n_metrica;
-    n_metrica = 0;
+
     for(tiempo=0; tiempo<TIEMPO_SIMULACION; tiempo++) {
 //        TIME = tiempo;
         //Actualizar Estados
@@ -55,17 +59,17 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-void InicializarParametros(char** argv) {
-    N_PERSONAS = (int) atoi(argv[1]);
-    MAX_X = (int) atoi(argv[2]);
-    MAX_Y = (int) atoi(argv[3]);
-    TIEMPO_SIMULACION = (int) atoi(argv[4]);
+void InicializarParametros(char** argv, char* v) {
+    N_PERSONAS = strtol(argv[1], &v, 10);
+    MAX_X = strtol(argv[2], &v, 10);
+    MAX_Y = strtol(argv[3], &v, 10);
+    TIEMPO_SIMULACION = strtol(argv[4], &v, 10);
 
-    ALFA = (int) atoi(argv[5]);
-    BETA = (int) atoi(argv[6]);
-    PORCENT_VACUNACION = (int) atoi(argv[7]);
+    ALFA = strtol(argv[5], &v, 10);
+    BETA = strtol(argv[6], &v, 10);
+    PORCENT_VACUNACION = strtol(argv[7], &v, 10);
 
-    TIEMPO_BATCH = (int) atoi(argv[8]);
+    TIEMPO_BATCH = strtol(argv[8], &v, 10);
 }
 
 void InicializarGlobales() {
@@ -114,7 +118,7 @@ void calcular_edad(ListaEnlazadaRef lista,int n){
     Persona *persona;
     gsl_rng *r;
 
-    mu=100;
+    mu=110;
     semilla=1;
 
     gsl_rng_env_setup();
