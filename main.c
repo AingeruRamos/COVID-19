@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <sys/time.h>
 
 #include "globales.h"
 
@@ -23,6 +24,8 @@ int main(int argc, char** argv) {
 
     int tiempo, n_metrica;
     char *v = NULL;
+    double seconds, microseconds,elapsed;
+    struct timeval begin,end;
     n_metrica = 0;
 
 
@@ -30,6 +33,8 @@ int main(int argc, char** argv) {
         printf("Error en los parametros\n");
         return -1;
     }
+
+    gettimeofday(&begin,0);
 
     srand(time(NULL));
 
@@ -55,6 +60,14 @@ int main(int argc, char** argv) {
     }
     liberarListaEnlazada(sanos);
     liberarListaEnlazada(contagiados);
+
+   gettimeofday(&end,0);
+
+   seconds=end.tv_sec - begin.tv_sec;
+   microseconds= end.tv_usec - begin.tv_usec;
+   elapsed = seconds + microseconds*1e-6;
+
+   printf("El tiempo de ejecución es %f seconds.\n", elapsed);
 
     return 0;
 }
@@ -97,7 +110,7 @@ void InicializarGlobales() {
     }
 
     crearVacia(contagiados);
-    nueva_persona = NuevaPersona(N_PERSONAS-1, 2);
+    nueva_persona = NuevaPersona(N_PERSONAS-1, 1);
     insertarNodoFinal(contagiados, nueva_persona);
 
     calcular_edad(sanos,N_SANOS);
