@@ -50,6 +50,9 @@ void AplicarPropagacion() {
 
                 eliminarNodo(sanos, nodo_sanos);
 		insertarNodoComienzo(contagios_nuevos, persona_copia);
+                N_SANOS--;
+                N_CONTAGIADOS++;
+                R0++;
             }
             nodo_contagiados = nodo_contagiados->sig;
         }

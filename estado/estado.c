@@ -48,6 +48,7 @@ int ActualizarEstado(tipoNodoRef nodo,int *flag, ListaEnlazadaRef sanos, ListaEn
             if (persona->cont_recu == PERIODO_RECUPERACION){
                 persona->estado = 3;
                 N_RECUPERADOS++;
+                N_SANOS++;
                 persona->cont_recu = 0;
                 PersonaSana(persona->id, sanos, contagiados);
             }
@@ -56,6 +57,7 @@ int ActualizarEstado(tipoNodoRef nodo,int *flag, ListaEnlazadaRef sanos, ListaEn
                 if (muerte <  persona->p_muerte){
                     persona->estado = 5;
                     N_FALLECIDOS++;
+                    N_CONTAGIADOS--;
                     *flag=1;
                     return persona->id;
                 }

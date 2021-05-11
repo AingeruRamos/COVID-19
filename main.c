@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <time.h>
 #include <sys/time.h>
+#include <gsl/gsl_rng.h>
+#include <gsl/gsl_randist.h>
+#include <math.h>
 
 #include "globales.h"
-
 #include "persona.h"
 #include "listaEnlazadaSimple.h"
 #include "estado/estado.h"
@@ -12,22 +14,16 @@
 #include "move/move.h"
 #include "metricas/metricas.h"
 
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
-#include <math.h>
-
 void InicializarParametros(char** argv,char* v);
 void InicializarGlobales();
 void calcular_edad(ListaEnlazadaRef lista,int n);
 
 int main(int argc, char** argv) {
 
-    int tiempo, n_metrica;
+    int tiempo, n_metrica, flag;
     char *v = NULL;
     double seconds, microseconds,elapsed;
     struct timeval begin,end;
-    n_metrica = 0;
-
 
     if(argc != 9) {
         printf("Error en los parametros\n");
@@ -41,9 +37,10 @@ int main(int argc, char** argv) {
     InicializarParametros(argv,v);
     InicializarGlobales();
 
+    n_metrica = 0;
+    flag = 0;
 
     for(tiempo=0; tiempo<TIEMPO_SIMULACION; tiempo++) {
-//        TIME = tiempo;
         //Actualizar Estados
         EstadosPersonas(contagiados,sanos);
         VacunarPersonas(sanos);
@@ -54,20 +51,25 @@ int main(int argc, char** argv) {
         AplicarMovimiento(contagiados);
 
         if(TIEMPO_BATCH == 0 || (tiempo % TIEMPO_BATCH) == 0) {
-            GuardarDatos(n_metrica);
+            if (tiempo == (TIEMPO_SIMULACION - 1)){
+                flag = 1;
+            }
+            GuardarDatos(n_metrica,flag);
             n_metrica++;
         }
     }
+
+    //llamar aqui a guardar metricas
     liberarListaEnlazada(sanos);
     liberarListaEnlazada(contagiados);
 
-   gettimeofday(&end,0);
+    gettimeofday(&end,0);
 
-   seconds=end.tv_sec - begin.tv_sec;
-   microseconds= end.tv_usec - begin.tv_usec;
-   elapsed = seconds + microseconds*1e-6;
+    seconds=end.tv_sec - begin.tv_sec;
+    microseconds= end.tv_usec - begin.tv_usec;
+    elapsed = seconds + microseconds*1e-6;
 
-   printf("El tiempo de ejecución es %f seconds.\n", elapsed);
+    printf("El tiempo de ejecución es %f seconds.\n", elapsed);
 
     return 0;
 }
@@ -116,11 +118,11 @@ void InicializarGlobales() {
     calcular_edad(sanos,N_SANOS);
     calcular_edad(contagiados,N_CONTAGIADOS);
 
-    M_SANOS = 1.0;
-    M_CONTAGIADOS = 1.0;
-    M_RECUPERADOS = 1.0;
-    M_FALLECIDOS = 1.0;
-    R0 = 1.0;
+    M_SANOS = 0.0;
+    M_CONTAGIADOS = 0.0;
+    M_RECUPERADOS = 0.0;
+    M_FALLECIDOS = 0.0;
+    R0 = 0.0;
 }
 
 

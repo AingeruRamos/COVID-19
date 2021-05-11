@@ -47,12 +47,15 @@ void GuardarMetricas(char* nombre) {
 
     FILE* fp = fopen(nombreFichero, "w");
 
-    if(TIEMPO_BATCH != 0) {
-        M_SANOS /= TIEMPO_BATCH+1;
-        M_CONTAGIADOS /= TIEMPO_BATCH+1;
-        M_RECUPERADOS /= TIEMPO_BATCH+1;
-        M_FALLECIDOS /= TIEMPO_BATCH+1;
-        R0 /= TIEMPO_BATCH; //Esto probablemente no sea asi
+    M_SANOS = (float) N_SANOS / N_PERSONAS;
+    M_CONTAGIADOS = (float) N_CONTAGIADOS / N_PERSONAS;
+    M_RECUPERADOS =(float) N_RECUPERADOS /N_PERSONAS;
+    M_FALLECIDOS = (float) N_FALLECIDOS / N_PERSONAS;
+    if (N_CONTAGIADOS == 0){
+        R0 = N_CONTAGIADOS;
+    }
+    else{
+        R0= N_CONTAGIADOS-1;
     }
 
     fprintf(fp, "SANOS: %f\n", M_SANOS);
@@ -61,25 +64,22 @@ void GuardarMetricas(char* nombre) {
     fprintf(fp, "FALLECIDOS: %f\n", M_FALLECIDOS);
     fprintf(fp, "R0: %f\n", R0);
 
-    M_SANOS = 0.0;
-    M_CONTAGIADOS = 0.0;
-    M_RECUPERADOS = 0.0;
-    M_FALLECIDOS = 0.0;
-    R0 = 0.0; //Esto probablemente no sea asi
-
     fclose(fp);
     free(nombreFichero);
 }
 
-void GuardarDatos(int id_metricas) {
+void GuardarDatos(int id_metricas, int flag) {
     char* ruta = (char*) malloc(sizeof(char)*200);
-    sprintf(ruta, "datos/%d_%d_%d_%d_%.2f_%.2f_%.2f/", N_PERSONAS, MAX_X, MAX_Y, TIEMPO_SIMULACION, ALFA, BETA, PORCENT_VACUNACION);
+    sprintf(ruta, "datos/%d_%d_%d_%d_%d_%d_%d/", N_PERSONAS, MAX_X, MAX_Y, TIEMPO_SIMULACION, ALFA, BETA, PORCENT_VACUNACION);
     mkdir(ruta, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
     sprintf(ruta, "%s%d", ruta, id_metricas);
 
     GuardarPosiciones(ruta);
-    GuardarMetricas(ruta);
+
+    if (flag == 1){
+        GuardarMetricas(ruta);
+    }
 
     free(ruta);
 }
