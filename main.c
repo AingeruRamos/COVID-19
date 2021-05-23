@@ -59,7 +59,6 @@ int main(int argc, char** argv) {
         }
     }
 
-    //llamar aqui a guardar metricas
     liberarListaEnlazada(sanos);
     liberarListaEnlazada(contagiados);
 
@@ -127,7 +126,7 @@ void InicializarGlobales() {
 
 
 void calcular_edad(ListaEnlazadaRef lista,int n){
-    int semilla, edad,i;
+    int semilla,edad,i;
     float mu;
     tipoNodoRef nodo = *lista;
     Persona *persona;
